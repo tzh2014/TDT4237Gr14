@@ -1,9 +1,14 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+date_default_timezone_set('Europe/Oslo');
+
 $app = new \Slim\Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => true,
+    'debug' => false,
+	'log.enabled' => true,
+	'log.level' => \Slim\Log::DEBUG,
+	'log.writer' => new tdt4237\webapp\LogWriter(),
     'view' => new \Slim\Views\Twig()
 ]);
 
@@ -18,7 +23,7 @@ try {
     // Set errormode to exceptions
     $app->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
-    echo $e->getMessage();
+    $app->log->critical($e->getMessage());
     exit();
 }
 
