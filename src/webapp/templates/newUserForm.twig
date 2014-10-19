@@ -4,13 +4,13 @@
 
 <h2>New user</h2>
 
-<b>{{ flash.info|raw }}</b> <br />
-<b>{{ flash.error|raw }}</b> <br />
+<b>{{ flash.info }}</b> <br />
+<b>{{ flash.error }}</b> <br />
 
 <form action="" method="POST">
 
 <label>Username: </label>
-<input type="text" name="user" value="{{ username|raw }}"> <br />
+<input type="text" name="user" value="{{ username }}"> <br />
 <label>Password: </label>
 <input type="text" name="pass"> <br />
 <input type="submit" name="submit" value="Create new user">
