@@ -32,6 +32,16 @@ class AdminController extends Controller
 
     function delete($username)
     {
+        if (Auth::guest()) {
+            $this->app->flash('info', "You must be logged in to delete the user.");
+            $this->app->redirect('/');
+        }    
+
+        if (! Auth::isAdmin()) {
+            $this->app->flash('info', "You must be administrator to delete the user.");
+            $this->app->redirect('/');
+        }
+
         if (User::deleteByUsername($username) === 1) {
             $this->app->flash('info', "Sucessfully deleted '$username'");
         } else {

@@ -15,6 +15,6 @@ class Hash
 
     static function check($plaintext, $hash)
     {
-        return self::make($plaintext) === $hash;
+        return  hash_equals(self::make($plaintext), $hash);
     }
 }
