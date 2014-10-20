@@ -12,6 +12,8 @@ class User
 
     const MIN_USER_LENGTH = 3;
     const MAX_USER_LENGTH = 10;
+    const MIN_PASSWORD_LENGTH = 8;
+    const MAX_PASSWORD_LENGTH = 16;
 
     protected $id = null;
     protected $user;
@@ -139,13 +141,13 @@ class User
     }
 
     /**
-     * The caller of this function can check the length of the returned 
+     * The caller of this function can check the length of the returned
      * array. If array length is 0, then all checks passed.
      *
      * @param User $user
      * @return array An array of strings of validation errors
      */
-    static function validate(User $user)
+    static function validate(User $user, $pass)
     {
         $validationErrors = [];
 
@@ -164,6 +166,24 @@ class User
         if (self::findByUser($user->user) !== null){
             array_push($validationErrors, 'This username has already existed.');
         }
+
+        if (strlen($pass) < self::MIN_PASSWORD_LENGTH) {
+            array_push($validationErrors, "Password too short. Min length is " . self::MIN_PASSWORD_LENGTH);
+        }
+
+        if (strlen($pass) > self::MAX_PASSWORD_LENGTH) {
+            array_push($validationErrors, "Password too long. Max length is " . self::MAX_PASSWORD_LENGTH);
+        }
+
+        $pwdContainsLowercase = preg_match('/[a-z]+/', $pass);
+        $pwdContainsUppercase = preg_match('/[A-Z]+/', $pass);
+        $pwdContainsDigit     = preg_match('/\d+/',    $pass);
+
+        // Check if password contains both upper and lowercase letters, and numbers, according to OWASP Best Practices
+        if ($pwdContainsLowercase && $pwdContainsUppercase && $pwdContainsDigit) {
+            array_push($validationErrors, "Password has to contain at least one uppercase character and number.");
+        }
+
         return $validationErrors;
     }
 
