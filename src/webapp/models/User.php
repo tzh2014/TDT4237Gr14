@@ -180,7 +180,7 @@ class User
         $pwdContainsDigit     = preg_match('/\d+/',    $pass);
 
         // Check if password contains both upper and lowercase letters, and numbers, according to OWASP Best Practices
-        if ($pwdContainsLowercase && $pwdContainsUppercase && $pwdContainsDigit) {
+        if ((!$pwdContainsLowercase) || (!$pwdContainsUppercase) || (!$pwdContainsDigit)) {
             array_push($validationErrors, "Password has to contain at least one uppercase character and number.");
         }
 
