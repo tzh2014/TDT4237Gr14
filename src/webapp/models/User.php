@@ -161,7 +161,7 @@ class User
             array_push($validationErrors, 'Username can only contain letters and numbers');
         }
 
-        if (User::findByUser($user->user) !== null){
+        if (self::findByUser($user->user) !== null){
             array_push($validationErrors, 'This username has already existed.');
         }
         return $validationErrors;
