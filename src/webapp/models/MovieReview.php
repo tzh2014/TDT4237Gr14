@@ -66,13 +66,16 @@ class MovieReview
         $text = $this->text;
 
         if ($this->id === null) {
-            $query = "INSERT INTO moviereviews (movieid, author, text) "
-                   . "VALUES ('$movieId', '$author', '$text')";
+            $stmt = static::$app->db->prepare("INSERT INTO moviereviews (movieid, author, text) "
+                . "VALUES (?, ?, ?)");
+            $stmt->bindParam(1, $movieId);
+            $stmt->bindParam(2, $author);
+            $stmt->bindParam(3, $text);
+            return $stmt->execute();
         } else {
             // TODO: Update moviereview here
+            return false;
         }
-
-        return static::$app->db->exec($query);
     }
 
     static function makeEmpty()
@@ -85,8 +88,10 @@ class MovieReview
      */
     static function findByMovieId($id)
     {
-        $query = "SELECT * FROM moviereviews WHERE movieid = $id";
-        $results = self::$app->db->query($query);
+        $stmt = self::$app->db->prepare("SELECT * FROM moviereviews WHERE movieid = ?");
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
 
         $reviews = [];
 
