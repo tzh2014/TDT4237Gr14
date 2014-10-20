@@ -4,8 +4,6 @@ namespace tdt4237\webapp\models;
 
 class MovieReview
 {
-    const SELECT_BY_ID = "SELECT * FROM moviereviews WHERE id = %s";
-
     private $id = null;
     private $movieId;
     private $author;

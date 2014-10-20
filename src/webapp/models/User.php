@@ -8,7 +8,7 @@ class User
 {
     const INSERT_QUERY = "INSERT INTO users(user, pass, email, age, bio, isadmin) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s')";
     const UPDATE_QUERY = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s' WHERE id='%s'";
-    const FIND_BY_NAME = "SELECT * FROM users WHERE user='%s'";
+    const FIND_BY_NAME = "SELECT * FROM users WHERE user= ?";
 
     const MIN_USER_LENGTH = 3;
     const MAX_USER_LENGTH = 10;
@@ -186,9 +186,10 @@ class User
      */
     static function findByUser($username)
     {
-        $query = sprintf(self::FIND_BY_NAME, $username);
-        $result = self::$app->db->query($query, \PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+        $stmt = self::$app->db->prepare(self::FIND_BY_NAME);
+        $stmt->bindParam(1, $username);
+        $stmt->execute();
+        $row = $stmt->fetch();
 
         if($row == false) {
             return null;
@@ -199,8 +200,15 @@ class User
 
     static function deleteByUsername($username)
     {
-        $query = "DELETE FROM users WHERE user='$username' ";
-        return self::$app->db->exec($query);
+        $user = User::findByUser($username);
+        if($user == null){
+            return false;
+        }
+
+        $stmt = self::$app->db->prepare("DELETE FROM users WHERE user= ?");
+        $stmt->bindParam(1, $username);
+
+        return $stmt->execute();
     }
 
     static function all()
