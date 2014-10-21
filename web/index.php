@@ -24,7 +24,6 @@ if(isset($_SESSION['timeout'])) {
         session_destroy();
         session_start();
         setcookie("PHPSESSID", session_id(), 0, "/", "", FALSE, TRUE);
-        echo "<script> alert('Time Out! Please login again.'); </script>";
         }
     }
      
