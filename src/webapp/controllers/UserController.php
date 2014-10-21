@@ -36,7 +36,7 @@ class UserController extends Controller
         $user->setUsername($username);
         $user->setHash($hashed);
 
-        $validationErrors = User::validate($user);
+        $validationErrors = User::validate($user, $pass);
 
         if (sizeof($validationErrors) > 0) {
             $errors = join("<br>\n", $validationErrors);
