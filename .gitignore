@@ -1,4 +1,5 @@
 app.db
+php_errors.log
 tags
 composer.phar
 vendor/*
