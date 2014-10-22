@@ -8,6 +8,9 @@ class LogWriter
 
     function __construct()
     {
+		if (!is_dir('log')) {
+			mkdir('log', 0755, true);
+		}
 		$this->out = fopen('log/app.log', 'a');
     }
 
