@@ -3,6 +3,7 @@
 namespace tdt4237\webapp\controllers;
 
 use tdt4237\webapp\Auth;
+use tdt4237\webapp\models\User;
 
 class LoginController extends Controller
 {
@@ -31,14 +32,7 @@ class LoginController extends Controller
         if (Auth::checkCredentials($user, $pass)) {
             session_regenerate_id();
             $_SESSION['user'] = $user;
-
-            $isAdmin = Auth::user()->isAdmin();
-
-            if ($isAdmin) {
-                setcookie("isadmin", "yes", 0, "/", "", FALSE, TRUE);
-            } else {
-                setcookie("isadmin", "no", 0, "/", "", FALSE, TRUE);
-            }
+			$_SESSION['isAdmin'] = User::findByUser($user)->isAdmin();
 
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');

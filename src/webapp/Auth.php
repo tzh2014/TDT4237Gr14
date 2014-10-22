@@ -55,11 +55,11 @@ class Auth
      */
     static function isAdmin()
     {
-        if (self::check()) {
-            return $_COOKIE['isadmin'] === 'yes';
-        }
-
-        throw new \Exception('Not logged in but called Auth::isAdmin() anyway');
+        if (self::check() && isset($_SESSION['isAdmin'])) {
+            return $_SESSION['isAdmin'];
+        } else {
+			return false;
+		}
     }
 
     static function logout()
