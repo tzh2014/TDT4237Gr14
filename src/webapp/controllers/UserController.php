@@ -29,6 +29,13 @@ class UserController extends Controller
         $request = $this->app->request;
         $username = $request->post('user');
         $pass = $request->post('pass');
+		$nonce = $request->post('nonce');
+
+		if (!Auth::checkNonce($nonce)) {
+			$this->app->flashNow('error', 'Broken session.');
+			$this->render('newUserForm.twig', ['username' => $username]);
+			return;
+		}
 
         $hashed = Hash::make($pass);
 
@@ -57,8 +64,15 @@ class UserController extends Controller
 
     function logout()
     {
-        Auth::logout();
-        $this->app->redirect('/?msg=Successfully logged out.');
+		$nonce = $this->app->request->get('nonce');
+		
+		if (Auth::checkNonce($nonce)) {	
+			Auth::logout();
+			$this->app->redirect('/?msg=Successfully logged out.');
+		} else {
+			$this->app->flash('info', 'Broken session.');
+			$this->app->redirect('/');
+		}
     }
 
     function show($username)
@@ -90,6 +104,13 @@ class UserController extends Controller
             $email = $request->post('email');
             $bio = $request->post('bio');
             $age = $request->post('age');
+			$nonce = $request->post('nonce');
+
+			if (!Auth::checkNonce($nonce)) {
+                $this->app->flashNow('error', 'Broken session.');
+        		$this->render('edituser.twig', ['user' => $user]);
+				return;
+			}
 
             $user->setEmail($email);
             $user->setBio($bio);

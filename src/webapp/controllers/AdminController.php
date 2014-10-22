@@ -31,16 +31,25 @@ class AdminController extends Controller
     }
 
     function delete($username)
-    {
+    {	
+		$nonce = $this->app->request->get('nonce');
+		if (! Auth::checkNonce($nonce)) {
+            $this->app->flash('info', "Broken session.");
+            $this->app->redirect('/admin');
+			return;
+		}
+
         if (Auth::guest()) {
             $this->app->flash('info', "You must be logged in to delete the user.");
             $this->app->redirect('/');
+			return;
         }    
 
         if (! Auth::isAdmin()) {
             $this->app->flash('info', "You must be administrator to delete the user.");
             $this->app->redirect('/');
-        }
+        	return;
+		}
         
         if (User::deleteByUsername($username)) {
             $this->app->flash('info', "Sucessfully deleted '$username'");

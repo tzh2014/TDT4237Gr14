@@ -19,7 +19,7 @@ class LoginController extends Controller
             $this->app->flash('info', 'You are already logged in as ' . $username);
             $this->app->redirect('/');
         } else {
-            $this->render('login.twig', []);
+            $this->render('login.twig', [ 'test' => 'me' ]);
         }
     }
 
@@ -28,8 +28,12 @@ class LoginController extends Controller
         $request = $this->app->request;
         $user = $request->post('user');
         $pass = $request->post('pass');
+		$nonce = $request->post('nonce');
 
-        if (Auth::checkCredentials($user, $pass)) {
+		if (!Auth::checkNonce($nonce)) {
+			$this->app->flashNow('error', "Broken session.");
+			$this->render('login.twig', []);
+		} else if (Auth::checkCredentials($user, $pass)) {
             session_regenerate_id();
             $_SESSION['user'] = $user;
 			$_SESSION['isAdmin'] = User::findByUser($user)->isAdmin();

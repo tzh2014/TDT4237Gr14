@@ -19,6 +19,8 @@ class Controller
             $variables['isAdmin'] = Auth::isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
         }
+			
+		$variables['nonce'] = Auth::getNonce();
 
         print $this->app->render($template, $variables);
     }

@@ -39,6 +39,13 @@ class MovieController extends Controller
     {
         $author = $this->app->request->post('author');
         $text = $this->app->request->post('text');
+		$nonce = $this->app->request->post('nonce');
+
+		if (!Auth::checkNonce($nonce)) {
+        	$this->app->flash('info', 'Broken Session.');
+        	$this->app->redirect('/movies/' . $id);
+			return;
+		}
 
         $review = MovieReview::makeEmpty();
         $review->setAuthor($author);
