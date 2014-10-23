@@ -136,9 +136,45 @@ class UserController extends Controller
             $user->setBio($bio);
             $user->setAge($age);
 
+            $pictureOk = true;
+            if($_FILES["profile"]["name"] != null){
+
+                if($_FILES["profile"]["size"] > 100000){
+                    $this->app->flashNow('error', 'Profile picture size is too big, max 100KB');
+                    $pictureOk = false;
+                }
+
+                $result_array = getimagesize($_FILES['profile']['tmp_name']);
+                if ($result_array == null || false === $ext = array_search($result_array['mime'],
+                        array(
+                            'jpg' => 'image/jpeg',
+                            'png' => 'image/png',
+                            'gif' => 'image/gif',
+                        ), true)) {
+                    $this->app->flashNow('error', 'Profile picture must be jpg, png or gif');
+                    $pictureOk = false;
+                }
+
+                if ($pictureOk === true) {
+                    $target_dir = "uploads/";
+                    $fileName = sha1_file($_FILES['profile']['tmp_name']). "." . $ext;
+                    $target_dir = $target_dir . $fileName;
+
+                    if(move_uploaded_file($_FILES['profile']['tmp_name'], $target_dir)){
+                        $user->setProfilePicPath($target_dir);
+                    }else{
+                        $pictureOk = false;
+                        $this->app->flashNow('error', 'There was an error uploading the profile picture');
+                    }
+                }
+            }
+            else{
+                $user->setProfilePicPath("");
+            }
+
             if (! User::validateAge($user)) {
                 $this->app->flashNow('error', 'Age must be between 0 and 150.');
-            } else {
+            } else if($pictureOk === true) {
                 $user->save();
                 $this->app->flashNow('info', 'Your profile was successfully saved.');
             }

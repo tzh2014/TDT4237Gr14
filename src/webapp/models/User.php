@@ -129,7 +129,7 @@ class User
 		return $this->verificationAnswer;
 	}
 
-	function getProfilePic()
+	function getProfilePicPath()
 	{
 		return $this->profilePicPath;
 	}
@@ -179,7 +179,7 @@ class User
 		$this->verificationAnswer = $answer;
 	}
 
-	function setProfilePic($profilePic)
+	function setProfilePicPath($profilePic)
 	{
 		$this->profilePicPath = $profilePic;
 	}
