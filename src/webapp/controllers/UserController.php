@@ -85,8 +85,8 @@ class UserController extends Controller
     function logout()
     {
 		$nonce = $this->app->request->get('nonce');
-		
-		if (Auth::checkNonce($nonce)) {	
+
+		if (Auth::checkNonce($nonce)) {
 			Auth::logout();
 			$this->app->redirect('/?msg=Successfully logged out.');
 		} else {
@@ -168,12 +168,12 @@ class UserController extends Controller
                 }
 
                 if ($pictureOk === true) {
-                    $target_dir = "uploads/";
+                    $target_dir = "web/uploads/";
                     $fileName = sha1_file($_FILES['profile']['tmp_name']). "." . $ext;
                     $target_dir = $target_dir . $fileName;
 
                     if(move_uploaded_file($_FILES['profile']['tmp_name'], $target_dir)){
-                        $user->setProfilePicPath($target_dir);
+                        $user->setProfilePicPath("/uploads/".$fileName);
                     }else{
                         $pictureOk = false;
                         $this->app->flashNow('error', 'There was an error uploading the profile picture');

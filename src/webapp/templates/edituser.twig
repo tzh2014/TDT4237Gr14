@@ -4,7 +4,7 @@
 
     <h2>Edit profile</h2>
 
-    <img src="{{ user.ProfilePicPath }}" /> <br />
+    <img height="100" width="100" src="{{ user.ProfilePicPath }}" alt="Profile picture" /> <br />
 
     <form action="" method="POST" enctype="multipart/form-data">
         <div id="flasherror">{{ flash.error }}</div>
@@ -17,16 +17,16 @@
 
         <label>Age:</label>
         <input type="text" name="age" value="{{ user.age }}"> <br />
-        
+
 		<label>Security question:</label>
         <input type="text" name="question" value="{{ user.VQuestion }}"> <br />
-        
+
 		<label>New answer to security question:</label>
         <input type="password" name="answer"> <br />
-        
+
 		<label>Change profile picture:</label>
         <input type="file" name="profile"> <br />
-		
+
 		<input type="hidden" name="nonce" value="{{ nonce }}">
         <input type="submit" name="submit" value="Save profile">
     </form>
