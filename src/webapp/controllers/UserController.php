@@ -29,6 +29,9 @@ class UserController extends Controller
         $request = $this->app->request;
         $username = $request->post('user');
         $pass = $request->post('pass');
+        $email = $request->post('email');
+        $question = $request->post('question');
+        $answer = $request->post('answer');
 		$nonce = $request->post('nonce');
 
 		if (!Auth::checkNonce($nonce)) {
@@ -39,17 +42,34 @@ class UserController extends Controller
 
         $hashed = Hash::make($pass);
 
+		$validationErrors = [];
+
         $user = User::makeEmpty();
         $user->setUsername($username);
         $user->setHash($hashed);
+		$user->setEmail($email);
+		if ($question && trim($question) != "") {
+			$user->setVQuestion($question);
+		} else {
+			$validationErrors[] = 'You have to set a security question that could be used for password recovery.';
+		}
+		if ($answer && trim($answer) != "") {
+			$user->setVAnswer($answer);
+		} else {
+			$validationErrors[] = 'You have to set an answer to your security question.';
+		}
 
-        $validationErrors = User::validate($user, $pass);
+        $validationErrors = array_merge($validationErrors, User::validate($user, $email, $pass));
 
         if (sizeof($validationErrors) > 0) {
             $errors = join("<br>\n", $validationErrors);
             $this->app->flashNow('error', $errors);
-            $this->render('newUserForm.twig', ['username' => $username]);
-        } else {
+            $this->render('newUserForm.twig', [
+				'username' => $username,
+				'email' => $email,
+				'question' => $question
+			]);
+		} else {
             $user->save();
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
             $this->app->redirect('/login');

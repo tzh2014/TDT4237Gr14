@@ -192,11 +192,9 @@ class User
      * @param User $user
      * @return array An array of strings of validation errors
      */
-    static function validate(User $user, $pass)
+    static function validate(User $user, $email, $pass)
     {
         $validationErrors = [];
-
-// TODO: add checks for email and question/answer.
 
         if (strlen($user->user) < self::MIN_USER_LENGTH) {
             array_push($validationErrors, "Username too short. Min length is " . self::MIN_USER_LENGTH);
@@ -213,6 +211,10 @@ class User
         if (self::findByUser($user->user) !== null){
             array_push($validationErrors, 'This username has already existed.');
         }
+
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			array_push($validationErrors, "You have to set a valid e-mail address.");
+		}
 
         $passErrors = self::validatePassword($pass);
 
