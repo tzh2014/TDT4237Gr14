@@ -36,6 +36,13 @@ $app->get('/', $ns . 'IndexController:index');
 $app->get('/login', $ns . 'LoginController:index');
 $app->post('/login', $ns . 'LoginController:login');
 
+// Forgotten Password form
+$app->get('/forgot', $ns . 'ForgottenPassController:index');
+$app->post('/forgot', $ns . 'ForgottenPassController:sendEmail');
+$app->post('/forgot/change', $ns . 'ForgottenPassController:changePass');
+$app->get('/forgot/:hash', $ns . 'ForgottenPassController:verification');
+$app->post('/forgot/:hash', $ns . 'ForgottenPassController:setNewPass');
+
 // New user
 $app->get('/user/new', $ns . 'UserController:index')->name('newuser');
 $app->post('/user/new', $ns . 'UserController:create');

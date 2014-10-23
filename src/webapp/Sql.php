@@ -16,8 +16,8 @@ class Sql
      * Create tables.
      */
     static function up() {
-        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(50), email varchar(50), age varchar(50), bio varhar(50), isadmin INTEGER);";
-        $q4 = "CREATE TABLE movies (id INTEGER PRIMARY KEY, name VARVHAR(50), imageurl VARCHAR(100) );";
+        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(64), email varchar(50), age varchar(50), bio varchar(50), question VARCHAR(50), answer VARCHAR(50), profile VARCHAR(50), isadmin INTEGER, passReset VARCHAR(50));";
+        $q4 = "CREATE TABLE movies (id INTEGER PRIMARY KEY, name VARCHAR(50), imageurl VARCHAR(100) );";
         $q5 = "CREATE TABLE moviereviews (id INTEGER PRIMARY KEY, movieid INTEGER, author VARVHAR(50), text VARCHAR(500) );";
 
         self::$pdo->exec($q1);
@@ -35,9 +35,13 @@ class Sql
         $hash2 = Hash::make('bobdylan');
         $hash3 = Hash::make('liverpool');
 
-        $q1 = "INSERT INTO users(user, pass, isadmin) VALUES ('admin', '$hash1', 1)";
-        $q2 = "INSERT INTO users(user, pass) VALUES ('bob', '$hash2')";
-        $q3 = "INSERT INTO users(user, pass) VALUES ('mike', '$hash3')";
+		$hash4 = Hash::make('toor');
+		$hash5 = Hash::make('42');
+		$hash6 = Hash::make('Luke Skywalker');
+
+        $q1 = "INSERT INTO users(user, email, question, answer, pass, isadmin) VALUES ('admin', 'admin@localhost', 'root?', '$hash4', '$hash1', 1)";
+        $q2 = "INSERT INTO users(user, email, question, answer, pass) VALUES ('bob', 'bob@localhost', 'Ultimate answer', '$hash5', '$hash2')";
+        $q3 = "INSERT INTO users(user, email, question, answer, pass) VALUES ('mike', 'mike@localhost', 'Whose father is Darth Vader?', '$hash6', '$hash3')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);

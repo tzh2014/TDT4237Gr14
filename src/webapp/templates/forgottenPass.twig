@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<h2>Login</h2>
+<h2>Forgotten password?</h2>
+
+If you have forgotten your password, please set your username in the form below. Email will be sent with further instructions.
 
 {{ flash.error }} <br />
 
@@ -10,13 +12,9 @@
 
 <label>Username: </label>
 <input type="text" name="user"> <br />
-<label>Password: </label>
-<input type="password" name="pass"> <br />
 		
 <input type="hidden" name="nonce" value="{{ nonce }}">
-<input type="submit" name="submit" value="Log in">
+<input type="submit" name="submit" value="Reset Password">
 </form>
-
-<a href="/forgot">Forgot your password?</a>
-
 {% endblock %}
+

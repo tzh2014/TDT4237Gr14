@@ -6,8 +6,8 @@ use tdt4237\webapp\Hash;
 
 class User
 {
-    const INSERT_QUERY = "INSERT INTO users(user, pass, email, age, bio, isadmin) VALUES(?, ?, ? , ? , ?, ?)";
-    const UPDATE_QUERY = "UPDATE users SET email=?, age=?, bio=?, isadmin=? WHERE id=?";
+    const INSERT_QUERY = "INSERT INTO users(user, pass, email, age, bio, question, answer, profile, isadmin) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const UPDATE_QUERY = "UPDATE users SET email=?, age=?, bio=?, question=?, answer=?, profile=?, isadmin=? WHERE id=?";
     const FIND_BY_NAME = "SELECT * FROM users WHERE user= ?";
 
     const MIN_USER_LENGTH = 3;
@@ -21,6 +21,9 @@ class User
     protected $email;
     protected $bio = 'Bio is empty.';
     protected $age;
+	protected $verificationQuestion;
+	protected $verificationAnswer;
+	protected $profilePicPath;
     protected $isAdmin = 0;
 
     static $app;
@@ -29,7 +32,9 @@ class User
     {
     }
 
-    static function make($id, $username, $hash, $email, $bio, $age, $isAdmin)
+    static function make($id, $username, $hash, $email, $bio, $age,
+						 $verificationQuestion, $verificationAnswer,
+						 $profilePicPath, $isAdmin)
     {
         $user = new User();
         $user->id = $id;
@@ -38,6 +43,9 @@ class User
         $user->email = $email;
         $user->bio = $bio;
         $user->age = $age;
+		$user->verificationQuestion = $verificationQuestion;
+		$user->verificationAnswer = $verificationAnswer;
+		$user->profilePicPath = $profilePicPath;
         $user->isAdmin = $isAdmin;
 
         return $user;
@@ -60,14 +68,20 @@ class User
             $stmt->bindParam(3, $this->email);
             $stmt->bindParam(4, $this->age);
             $stmt->bindParam(5, $this->bio);
-            $stmt->bindParam(6, $this->isAdmin);
+			$stmt->bindParam(6, $this->verificationQuestion);
+			$stmt->bindParam(7, $this->verificationAnswer);
+			$stmt->bindParam(8, $this->profilePicPath);
+            $stmt->bindParam(9, $this->isAdmin);
         } else {
             $stmt = self::$app->db->prepare(self::UPDATE_QUERY);
             $stmt->bindParam(1, $this->email);
             $stmt->bindParam(2, $this->age);
             $stmt->bindParam(3, $this->bio);
-            $stmt->bindParam(4, $this->isAdmin);
-            $stmt->bindParam(5, $this->id);
+			$stmt->bindParam(4, $this->verificationQuestion);
+			$stmt->bindParam(5, $this->verificationAnswer);
+			$stmt->bindParam(6, $this->profilePicPath);
+            $stmt->bindParam(7, $this->isAdmin);
+            $stmt->bindParam(8, $this->id);
         }
 
         return $stmt->execute();
@@ -103,6 +117,21 @@ class User
         return $this->age;
     }
 
+	function getVQuestion()
+	{
+		return $this->verificationQuestion;
+	}
+
+	function getVAnswer()
+	{
+		return $this->verificationAnswer;
+	}
+
+	function getProfilePic()
+	{
+		return $this->profilePicPath;
+	}
+
     function isAdmin()
     {
         return $this->isAdmin === "1";
@@ -137,6 +166,22 @@ class User
     {
         $this->age = $age;
     }
+	
+	function setVQuestion($question)
+	{
+		$this->verificationQuestion = $question;
+	}
+
+	function setVAnswer($answer)
+	{
+		$this->verificationAnswer = $answer;
+	}
+
+	function setProfilePic($profilePic)
+	{
+		$this->profilePicPath = $profilePic;
+	}
+
 
     /**
      * The caller of this function can check the length of the returned
@@ -148,6 +193,8 @@ class User
     static function validate(User $user, $pass)
     {
         $validationErrors = [];
+
+// TODO: add checks for email and question/answer.
 
         if (strlen($user->user) < self::MIN_USER_LENGTH) {
             array_push($validationErrors, "Username too short. Min length is " . self::MIN_USER_LENGTH);
@@ -253,6 +300,9 @@ class User
             $row['email'],
             $row['bio'],
             $row['age'],
+			$row['question'],
+			$row['answer'],
+			$row['profile'],
             $row['isadmin']
         );
     }

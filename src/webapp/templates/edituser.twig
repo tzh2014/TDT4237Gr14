@@ -4,6 +4,8 @@
 
     <h2>Edit profile</h2>
 
+Profile picture
+
     <form action="" method="POST">
         <div id="flasherror">{{ flash.error }}</div>
 
@@ -15,7 +17,13 @@
 
         <label>Age:</label>
         <input type="text" name="age" value="{{ user.age }}"> <br />
-
+        
+		<label>Security question:</label>
+        <input type="text" name="age" value="{{ user.VQuestion }}"> <br />
+        
+		<label>Change profile picture:</label>
+        <input type="file" name="profile"> <br />
+		
 		<input type="hidden" name="nonce" value="{{ nonce }}">
         <input type="submit" name="submit" value="Save profile">
     </form>

@@ -19,7 +19,7 @@ class LoginController extends Controller
             $this->app->flash('info', 'You are already logged in as ' . $username);
             $this->app->redirect('/');
         } else {
-            $this->render('login.twig', [ 'test' => 'me' ]);
+            $this->render('login.twig', []);
         }
     }
 
