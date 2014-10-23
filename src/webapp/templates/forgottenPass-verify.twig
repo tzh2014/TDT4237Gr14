@@ -4,14 +4,15 @@
 
 <h2>Forgotten password?</h2>
 
-Hash: {{ hash }}
+Hello {{ username }}. If you want to reset your password, please answer your security question.
 
-{{ flash.error }} <br />
+<br />
+<div>{{ flash.error }}</div><br />
 
 <form action="" method="POST">
 
-<label>Username: </label>
-<input type="text" name="user"> <br />
+<label>{{ question }} </label>
+<input type="password" name="ans"> <br />
 		
 <input type="hidden" name="nonce" value="{{ nonce }}">
 <input type="submit" name="submit" value="Reset Password">

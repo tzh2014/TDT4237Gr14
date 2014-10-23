@@ -4,9 +4,10 @@
 
 <h2>Forgotten password?</h2>
 
-{{ flash.error }} <br />
+Hello {{ username }}. Thank you for answering your question. Now you can choose a new password.
 
-Select a new password
+<br />
+<div>{{ flash.error }}</div><br />
 
 <form action="/forgot/change" method="POST">
 

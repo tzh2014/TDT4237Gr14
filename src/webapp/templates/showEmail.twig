@@ -2,7 +2,14 @@
 
 {% block content %}
 
-Body of the email with data that should have been sent.
+Email with data that should have been sent.
+
+<br />
+<div>TO: {{ to }}</div><br />
+<div>SUBJECT: {{ subject }}</div><br />
+<div>MESSAGE BODY: <br />
+{{ message | raw }}
+</div>
 
 {% endblock %}
 

@@ -9,6 +9,8 @@ class User
     const INSERT_QUERY = "INSERT INTO users(user, pass, email, age, bio, question, answer, profile, isadmin) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const UPDATE_QUERY = "UPDATE users SET email=?, age=?, bio=?, question=?, answer=?, profile=?, isadmin=? WHERE id=?";
     const FIND_BY_NAME = "SELECT * FROM users WHERE user= ?";
+    const FIND_BY_RESET_HASH = "SELECT * FROM users WHERE passReset= ?";
+    const UPDATE_PASSWORD = "UPDATE users SET pass=? WHERE id=?";
 
     const MIN_USER_LENGTH = 3;
     const MAX_USER_LENGTH = 10;
@@ -212,7 +214,21 @@ class User
             array_push($validationErrors, 'This username has already existed.');
         }
 
-        if (strlen($pass) < self::MIN_PASSWORD_LENGTH) {
+        $passErrors = self::validatePassword($pass);
+
+        if (sizeof($passErrors) > 0) {
+            $errors = join("<br>\n", $passErrors);
+			array_push($validationErrors, $errors);
+        }
+
+        return $validationErrors;
+    }
+
+	static function validatePassword($pass)
+	{
+        $validationErrors = [];
+        
+		if (strlen($pass) < self::MIN_PASSWORD_LENGTH) {
             array_push($validationErrors, "Password too short. Min length is " . self::MIN_PASSWORD_LENGTH);
         }
 
@@ -229,8 +245,8 @@ class User
             array_push($validationErrors, "Password has to contain at least one uppercase character and number.");
         }
 
-        return $validationErrors;
-    }
+		return $validationErrors;
+	}
 
     static function validateAge(User $user)
     {
@@ -262,6 +278,34 @@ class User
 
         return User::makeFromSql($row);
     }
+     
+	/** 
+	 * Find user in db by reset password hash
+     *
+     * @param string $hash
+     * @return mixed User or null if not found.
+     */
+    static function findByResetHash($hash)
+    {
+        $stmt = self::$app->db->prepare(self::FIND_BY_RESET_HASH);
+        $stmt->bindParam(1, $hash);
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if($row == false) {
+            return null;
+        }
+
+        return User::makeFromSql($row);
+    }
+
+	static function setNewPassword($id, $password)
+	{
+		$stmt = self::$app->db->prepare(self::UPDATE_PASSWORD);
+		$stmt->bindParam(1, $password);
+		$stmt->bindParam(2, $id);
+		$stmt->execute();
+	}
 
     static function deleteByUsername($username)
     {

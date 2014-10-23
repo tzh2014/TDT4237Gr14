@@ -32,12 +32,12 @@ class Sql
 
     static function insertDummyUsers() {
         $hash1 = Hash::make(bin2hex(openssl_random_pseudo_bytes(2)));
-        $hash2 = Hash::make('bobdylan');
-        $hash3 = Hash::make('liverpool');
+        $hash2 = Hash::make('bobDylan1');
+        $hash3 = Hash::make('Liverpool26');
 
-		$hash4 = Hash::make('toor');
-		$hash5 = Hash::make('42');
-		$hash6 = Hash::make('Luke Skywalker');
+		$hash4 = Hash::make('I am toor.');
+		$hash5 = Hash::make('42 of course');
+		$hash6 = Hash::make('Luke Skywalker\'s and Leia\'s');
 
         $q1 = "INSERT INTO users(user, email, question, answer, pass, isadmin) VALUES ('admin', 'admin@localhost', 'root?', '$hash4', '$hash1', 1)";
         $q2 = "INSERT INTO users(user, email, question, answer, pass) VALUES ('bob', 'bob@localhost', 'Ultimate answer', '$hash5', '$hash2')";
