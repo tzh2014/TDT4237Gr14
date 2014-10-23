@@ -124,6 +124,8 @@ class UserController extends Controller
             $email = $request->post('email');
             $bio = $request->post('bio');
             $age = $request->post('age');
+			$question = $request->post('question');
+			$answer = $request->post('answer');
 			$nonce = $request->post('nonce');
 
 			if (!Auth::checkNonce($nonce)) {
@@ -132,9 +134,19 @@ class UserController extends Controller
 				return;
 			}
 
-            $user->setEmail($email);
+			if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            	$user->setEmail($email);
+			} else {
+				$this->app->flashNow('info', "Email was not changed, because of invalid input.");
+			}
             $user->setBio($bio);
             $user->setAge($age);
+			if ($question && trim($question) != "") {
+				$user->setVQuestion($question);
+			}
+			if ($answer && trim($answer) != "") {
+				$user->setVAnswer(Hash::make($answer));
+			}
 
             $pictureOk = true;
             if($_FILES["profile"]["name"] != null){
