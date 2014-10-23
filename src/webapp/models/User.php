@@ -168,7 +168,7 @@ class User
     {
         $this->age = $age;
     }
-	
+
 	function setVQuestion($question)
 	{
 		$this->verificationQuestion = $question;
@@ -229,7 +229,7 @@ class User
 	static function validatePassword($pass)
 	{
         $validationErrors = [];
-        
+
 		if (strlen($pass) < self::MIN_PASSWORD_LENGTH) {
             array_push($validationErrors, "Password too short. Min length is " . self::MIN_PASSWORD_LENGTH);
         }
@@ -244,7 +244,7 @@ class User
 
         // Check if password contains both upper and lowercase letters, and numbers, according to OWASP Best Practices
         if ((!$pwdContainsLowercase) || (!$pwdContainsUppercase) || (!$pwdContainsDigit)) {
-            array_push($validationErrors, "Password has to contain at least one uppercase character and number.");
+            array_push($validationErrors, "Password must be a combination of lowercase character(s), uppercase character(s) and number(s).");
         }
 
 		return $validationErrors;
@@ -280,8 +280,8 @@ class User
 
         return User::makeFromSql($row);
     }
-     
-	/** 
+
+	/**
 	 * Find user in db by reset password hash
      *
      * @param string $hash
