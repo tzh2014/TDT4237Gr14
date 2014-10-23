@@ -54,7 +54,7 @@ class UserController extends Controller
 			$validationErrors[] = 'You have to set a security question that could be used for password recovery.';
 		}
 		if ($answer && trim($answer) != "") {
-			$user->setVAnswer($answer);
+			$user->setVAnswer(Hash::make($answer));
 		} else {
 			$validationErrors[] = 'You have to set an answer to your security question.';
 		}
