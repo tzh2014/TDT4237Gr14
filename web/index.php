@@ -20,7 +20,9 @@ if(isset($_SESSION['timeout'])) {
     // visit is larger than the timeout period.
     $duration = time() - (int)$_SESSION['timeout'];
     if($duration > $timeout) {
-        unset($_SESSION['user']);
+        session_destroy();
+        session_start();
+        setcookie("PHPSESSID", session_id(), 0, "/", "", FALSE, TRUE);
         }
     }
      
