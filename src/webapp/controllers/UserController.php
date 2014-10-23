@@ -180,9 +180,6 @@ class UserController extends Controller
                     }
                 }
             }
-            else{
-                $user->setProfilePicPath("");
-            }
 
             if (! User::validateAge($user)) {
                 $this->app->flashNow('error', 'Age must be between 0 and 150.');
