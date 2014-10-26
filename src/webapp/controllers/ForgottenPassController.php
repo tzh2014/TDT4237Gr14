@@ -42,11 +42,13 @@ class ForgottenPassController extends Controller
 		$passResetHash = hash('sha256', $passResetHash);
 		$this->app->db->query("UPDATE users SET passReset = '$passResetHash' WHERE id = '" . $user->getId() . "'");
 
+		$serverRoot = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+
 		$to = $user->getEmail();
 		$subject = "Password reset request from Movie Reviews app";
 		$message = "To reset your password please visit the following link:
 <br /><br />
-	http://localhost:8080/forgot/$passResetHash
+	$serverRoot/forgot/$passResetHash
 <br /><br />
 If you did not ask for password reset, please ignore this email.";
 
